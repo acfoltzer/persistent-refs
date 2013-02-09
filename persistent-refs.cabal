@@ -1,4 +1,4 @@
-name:                persistent-ref
+name:                persistent-refs
 version:             0.1
 license:             BSD3
 license-file:        LICENSE
@@ -10,7 +10,12 @@ cabal-version:       >=1.8
 
 library
   build-depends:     base == 4.6.*,
-                     containers == 0.5.*
+                     containers == 0.5.*,
+                     lens >= 3.7,
+                     mtl  >= 2.1,
+                     ref-fd >= 0.3,
+                     transformers >= 0.3
   exposed-modules:   Control.Monad.ST.Persistent,
                      Data.STRef.Persistent
+  other-modules:     Control.Monad.ST.Persistent.Internal
   hs-source-dirs:    src
