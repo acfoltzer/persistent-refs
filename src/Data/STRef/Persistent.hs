@@ -1,9 +1,26 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-{-# OPTIONS_GHC -Wall #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Data.STRef.Persistent
+-- Copyright   :  (c) Adam C. Foltzer 2013
+-- License     :  BSD3
+--
+-- Maintainer  :  acfoltzer@gmail.com
+-- Stability   :  experimental
+-- Portability :  non-portable (requires rank-2 types for runST)
+--
+-- Mutable references in the persistent
+-- 'Control.Monad.ST.Persistent.ST' monad.
+--
+-----------------------------------------------------------------------------
+
 module Data.STRef.Persistent (
+    -- * 'STRef's
     STRef
+    -- * 'MonadRef' Operations
   , MonadRef(..)
   , modifyRef'
   ) where
@@ -17,18 +34,21 @@ import Unsafe.Coerce
 
 newtype STRef s a = STRef Int
 
-newSTRef :: Monad m => a -> STT s m (STRef s a)
-newSTRef x = do i <- next <<%= (+1)
-                heap %= insert i (unsafeCoerce x)
-                return (STRef i)
+newSTRef :: a -> ST s (STRef s a)
+newSTRef x = ST $ do 
+    i <- next <<%= (+1)
+    heap %= insert i (unsafeCoerce x)
+    return (STRef i)
 
-readSTRef :: Monad m => STRef s a -> STT s m a
-readSTRef (STRef i) = uses heap (unsafeCoerce . fromJust . IntMap.lookup i)
+readSTRef :: STRef s a -> ST s a
+readSTRef (STRef i) = 
+    ST $ uses heap (unsafeCoerce . fromJust . IntMap.lookup i)
 
-writeSTRef :: Monad m => STRef s a -> a -> STT s m ()
-writeSTRef (STRef i) x = heap %= insert i (unsafeCoerce x)
+writeSTRef :: STRef s a -> a -> ST s ()
+writeSTRef (STRef i) x = 
+    ST $ heap %= insert i (unsafeCoerce x)
 
-instance Monad m => MonadRef (STRef s) (STT s m) where
+instance MonadRef (STRef s) (ST s) where
     newRef   = newSTRef
     readRef  = readSTRef
     writeRef = writeSTRef
