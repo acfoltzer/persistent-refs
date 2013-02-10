@@ -11,6 +11,7 @@ cabal-version:       >=1.8
 library
   build-depends:     base         >= 4.0 && < 5,
                      containers   >= 0.4 && < 0.6,
+                     lens         >= 3.7 && < 3.9,
                      mtl          >= 2.1 && < 2.2,
                      ref-fd       >= 0.3 && < 0.4,
                      transformers >= 0.3 && < 0.4
