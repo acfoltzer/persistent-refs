@@ -33,6 +33,7 @@ import Data.Maybe
 import Unsafe.Coerce
 
 newtype STRef s a = STRef Int
+    deriving (Eq, Ord, Show)
 
 newSTRef :: Monad m => a -> STT s m (STRef s a)
 newSTRef x = STT $ do
