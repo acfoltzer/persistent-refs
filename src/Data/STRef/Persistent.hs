@@ -25,7 +25,7 @@ module Data.STRef.Persistent (
   , modifyRef'
   ) where
 
-import Control.Lens
+import Control.Monad.State
 import Control.Monad.Ref
 import Control.Monad.ST.Persistent.Internal
 import Data.IntMap as IntMap
@@ -34,21 +34,26 @@ import Unsafe.Coerce
 
 newtype STRef s a = STRef Int
 
-newSTRef :: a -> ST s (STRef s a)
-newSTRef x = ST $ do 
-    i <- next <<%= (+1)
-    heap %= insert i (unsafeCoerce x)
+newSTRef :: Monad m => a -> STT s m (STRef s a)
+newSTRef x = STT $ do
+    s <- get
+    let i = next s
+        heap' = insert i (unsafeCoerce x) (heap s)
+        next' = next s + 1
+    put $ s { heap = heap', next = next' }
     return (STRef i)
 
-readSTRef :: STRef s a -> ST s a
-readSTRef (STRef i) = 
-    ST $ uses heap (unsafeCoerce . fromJust . IntMap.lookup i)
+readSTRef :: Monad m => STRef s a -> STT s m a
+readSTRef (STRef i) = STT $
+    return . unsafeCoerce . fromJust . IntMap.lookup i =<< gets heap
 
-writeSTRef :: STRef s a -> a -> ST s ()
-writeSTRef (STRef i) x = 
-    ST $ heap %= insert i (unsafeCoerce x)
+writeSTRef :: Monad m => STRef s a -> a -> STT s m ()
+writeSTRef (STRef i) x = STT $ do
+    s <- get
+    let heap' = insert i (unsafeCoerce x) (heap s)
+    put $ s { heap = heap' }
 
-instance MonadRef (STRef s) (ST s) where
+instance Monad m => MonadRef (STRef s) (STT s m) where
     newRef   = newSTRef
     readRef  = readSTRef
     writeRef = writeSTRef

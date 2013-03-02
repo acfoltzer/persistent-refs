@@ -20,6 +20,9 @@ module Control.Monad.ST.Persistent (
     -- * The Persistent 'ST' Monad
     ST
   , runST
+    -- * The Persistent 'ST' Monad transformer
+  , STT
+  , runSTT
   ) where
 
 import Control.Monad.ST.Persistent.Internal

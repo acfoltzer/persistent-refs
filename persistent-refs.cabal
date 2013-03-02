@@ -1,5 +1,5 @@
 name:                persistent-refs
-version:             0.1
+version:             0.2
 license:             BSD3
 license-file:        LICENSE
 author:              Adam C. Foltzer
@@ -9,7 +9,7 @@ bug-reports:         https://github.com/acfoltzer/persistent-refs/issues
 category:            Data
 build-type:          Simple
 cabal-version:       >=1.8
-synopsis:            
+synopsis:
     Haskell references backed by an IntMap for persistence and reversibility.
 description:
     This library provides support for a persistent version of the
@@ -23,12 +23,11 @@ source-repository head
   location: git://github.com/acfoltzer/persistent-refs.git
 
 library
-  build-depends:     base         >= 4.0 && < 5,
-                     containers   >= 0.4 && < 0.6,
-                     lens         >= 3.7 && < 3.9,
-                     mtl          >= 2.1 && < 2.2,
-                     ref-fd       >= 0.3 && < 0.4,
-                     transformers >= 0.3 && < 0.4
+  build-depends:     base         >= 4.0,
+                     containers   >= 0.4,
+                     mtl          >= 2.1,
+                     ref-fd       >= 0.3,
+                     transformers >= 0.3
   exposed-modules:   Control.Monad.ST.Persistent,
                      Data.STRef.Persistent
   other-modules:     Control.Monad.ST.Persistent.Internal
