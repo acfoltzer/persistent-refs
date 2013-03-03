@@ -20,6 +20,7 @@
 module Data.STRef.Persistent (
     -- * 'STRef's
     STRef
+  , asInt
     -- * 'MonadRef' Operations
   , MonadRef(..)
   , modifyRef'
@@ -33,7 +34,11 @@ import Data.Maybe
 import Unsafe.Coerce
 
 newtype STRef s a = STRef Int
-    deriving (Eq, Ord, Show)
+    deriving (Eq, Show)
+
+-- | Get the underlying 'Int' from an 'STRef'. Useful for debugging.
+asInt :: STRef s a -> Int
+asInt (STRef i) = i
 
 newSTRef :: Monad m => a -> STT s m (STRef s a)
 newSTRef x = STT $ do

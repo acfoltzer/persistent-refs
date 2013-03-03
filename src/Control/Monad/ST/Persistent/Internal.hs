@@ -3,7 +3,7 @@
 
 module Control.Monad.ST.Persistent.Internal where
 
-import Control.Applicative (Applicative)
+import Control.Applicative (Alternative, Applicative)
 import Control.Monad.State.Strict
 import Data.Functor.Identity
 import Data.IntMap (IntMap, empty)
@@ -15,7 +15,7 @@ emptyHeap :: Heap
 emptyHeap = Heap { heap = empty, next = minBound }
 
 -- | A persistent version of the 'Control.Monad.ST.ST' monad.
-type ST s a = STT s Identity a
+type ST s = STT s Identity
 
 -- | Run a computation that uses persistent references, and return a
 -- pure value. The rank-2 type offers similar guarantees to
@@ -24,7 +24,7 @@ runST :: (forall s. ST s a) -> a
 runST = runIdentity . runSTT
 
 newtype STT s m a = STT (StateT Heap m a)
-    deriving (Functor, Applicative, Monad, MonadIO, MonadTrans)
+    deriving (Functor, Applicative, Alternative, Monad, MonadIO, MonadPlus, MonadTrans)
 
 -- | Run a computation that uses persistent references, and return a
 -- pure value. The rank-2 type offers similar guarantees to
