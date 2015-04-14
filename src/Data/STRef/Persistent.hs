@@ -23,7 +23,6 @@ module Data.STRef.Persistent (
   , asInt
     -- * 'MonadRef' Operations
   , MonadRef(..)
-  , modifyRef'
   ) where
 
 import Control.Monad.State
@@ -63,9 +62,3 @@ instance Monad m => MonadRef (STRef s) (STT s m) where
     newRef   = newSTRef
     readRef  = readSTRef
     writeRef = writeSTRef
-
-modifyRef' :: MonadRef r m => r a -> (a -> a) -> m ()
-modifyRef' r f = do
-    x <- readRef r
-    let x' = f x
-    x' `seq` writeRef r x'
