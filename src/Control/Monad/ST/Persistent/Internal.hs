@@ -1,5 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE Rank2Types #-}
+{-# LANGUAGE ImpredicativeTypes #-}
 
 module Control.Monad.ST.Persistent.Internal where
 
