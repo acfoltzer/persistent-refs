@@ -27,7 +27,7 @@ module Data.STRef.Persistent (
   ) where
 
 import Control.Monad.State
-import Control.Monad.Ref
+import Control.Monad.Ref hiding (modifyRef')
 import Control.Monad.ST.Persistent.Internal
 import Data.IntMap as IntMap
 import Data.Maybe
